@@ -20,51 +20,51 @@ import com.nadajp.sample.demo.model.ResourceResponse;
 import com.nadajp.sample.demo.model.ResourcesResponse;
 
 @RestController
-@RequestMapping(value="/resource", produces = "application/json")
-@CrossOrigin(origins = {"http://localhost:4200", "https://replit.com/@nadajp/frontend"})
+@RequestMapping(value = "/resource", produces = "application/json")
+@CrossOrigin(origins = { "http://localhost:4200", "https://frontend.nadajp.repl.co" })
 public class ResourceController {
 
-    @Value("${reqresUrl}")
-    private String reqresUrl;
+  @Value("${reqresUrl}")
+  private String reqresUrl;
 
-    @Autowired
-    private RestTemplate restTemplate;
-    
-    @GetMapping("")
-    public List<Resource> getResourceList(@RequestParam(required = false) Integer page, 
-                                           @RequestParam(required = false) Integer per_page) {
-        
-        String url = buildUrl(reqresUrl, page, per_page);                                    
-        ResponseEntity<ResourcesResponse> entity =  restTemplate.getForEntity(url,ResourcesResponse.class);
+  @Autowired
+  private RestTemplate restTemplate;
 
-        return entity.getStatusCode() == HttpStatus.OK ? entity.getBody().getData() : null;
+  @GetMapping("")
+  public List<Resource> getResourceList(@RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer per_page) {
+
+    String url = buildUrl(reqresUrl, page, per_page);
+    ResponseEntity<ResourcesResponse> entity = restTemplate.getForEntity(url, ResourcesResponse.class);
+
+    return entity.getStatusCode() == HttpStatus.OK ? entity.getBody().getData() : null;
+  }
+
+  private String buildUrl(String reqresUrl, Integer page, Integer per_page) {
+    String url = reqresUrl + "resource";
+    if (page != null) {
+      url += "?page=" + page;
+      if (per_page != null) {
+        url += "&per_page=" + per_page;
+      }
     }
+    return url;
+  }
 
-    private String buildUrl(String reqresUrl, Integer page, Integer per_page) {
-        String url= reqresUrl + "resource";
-        if (page != null) {
-            url += "?page=" + page;
-            if (per_page != null) {
-                url += "&per_page=" + per_page;
-            }
-        }
-        return url;
-    }
+  @GetMapping("/{id}")
+  public Resource getResourceById(@PathVariable long id) {
+    String url = reqresUrl + "resource/" + id;
 
-    @GetMapping("/{id}")
-    public Resource getResourceById(@PathVariable long id) {
-        String url= reqresUrl + "resource/" + id;
-  
-        ResponseEntity<ResourceResponse> entity =  restTemplate.getForEntity(url, ResourceResponse.class);
-        
-        // add null check
-        return entity.getStatusCode() == HttpStatus.OK ? entity.getBody().getData() : null;
-    }
+    ResponseEntity<ResourceResponse> entity = restTemplate.getForEntity(url, ResourceResponse.class);
 
-    @DeleteMapping(value = "/{id}")
-	public void deleteResource(@PathVariable int id) {
-        String url= reqresUrl + "resource/" + id;
+    // add null check
+    return entity.getStatusCode() == HttpStatus.OK ? entity.getBody().getData() : null;
+  }
 
-        restTemplate.delete(url);		
-	}
+  @DeleteMapping(value = "/{id}")
+  public void deleteResource(@PathVariable int id) {
+    String url = reqresUrl + "resource/" + id;
+
+    restTemplate.delete(url);
+  }
 }
