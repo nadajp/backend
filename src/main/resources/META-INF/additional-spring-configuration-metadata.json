@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "reqresUrl",
+  "type": "java.lang.String",
+  "description": "Url for external api being used to authenitcate users and get resources"
+}]}
