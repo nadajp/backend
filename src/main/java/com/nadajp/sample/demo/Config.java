@@ -9,8 +9,7 @@ public class Config {
    
     @Bean 
     public RestTemplate restTemplate() {
-        RestTemplate template = new RestTemplate();
-        // include other settings here
-        return template;
+        final RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
     }
 }
